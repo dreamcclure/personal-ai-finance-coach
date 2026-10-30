@@ -1,0 +1,22 @@
+# ClearLedger Personal Finance Coach — pinned environment (Python 3.12)
+# Recreate with:  python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
+
+# --- data & ML ---
+pandas==3.0.3
+numpy==2.5.1
+scikit-learn==1.9.0
+pyarrow==25.0.0          # parquet caching of processed data
+
+# --- frontend ---
+streamlit==1.59.1
+plotly==6.9.0            # donut + trend charts in the dashboard
+
+# --- config ---
+PyYAML==6.0.3            # config.yaml
+python-dotenv==1.2.2     # load API key from .env
+
+# --- testing ---
+pytest==9.1.1
+
+# --- LLM provider ---
+openai==2.45.0           # OpenAI API (categorization + chat coach)

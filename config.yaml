@@ -1,0 +1,9 @@
+# ClearLedger configuration — edit values here, never hard-code them in the code.
+paths:
+  data_dir: data
+  processed_dir: data/processed
+
+reference_day: 15              # simulated mid-month cutoff (day of month) for MTD / projection
+random_seed: 42
+target_user: 1696
+buckets_file: data/processed/mcc_category_map.json

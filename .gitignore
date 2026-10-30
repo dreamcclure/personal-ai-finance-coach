@@ -1,0 +1,26 @@
+# Virtual environment — never commit this; it's recreated from requirements.txt
+.venv/
+venv/
+
+# Secrets — NEVER commit the real API key
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Jupyter checkpoint files
+.ipynb_checkpoints/
+
+# macOS system files
+.DS_Store
+
+# PyCharm settings
+.idea/
+
+# Full dataset — synthetic course data, excluded from the public repo for size
+# (transactions.csv is ~67MB) and privacy optics (card_number/cvv/address columns).
+# Small sanitized *.sample.csv files are committed instead — see data/README.md.
+data/transactions.csv
+data/cards.csv
+data/users.csv
