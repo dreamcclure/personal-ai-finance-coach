@@ -45,6 +45,11 @@ with st.container(border=True):
     c2.metric("Projected month-end", f"${summary['projected']:,.0f}")
     c3.metric("Monthly limit", f"${summary['limit']:,.0f}")
 
+# In the public demo there's no API key; make the coach's limitation clear and intentional.
+if not cfg["llm"].get("api_key"):
+    st.info("💬 Live chat is disabled in this public demo (no API key configured). "
+            "The dashboard is fully functional — run the app locally with your own key to chat.")
+
 # Per-user chat history (switching users starts a fresh conversation).
 state_key = f"chat_history_{uid}"
 if state_key not in st.session_state:
@@ -63,8 +68,13 @@ if prompt:
         with st.spinner("Coaching…"):
             try:
                 reply = coach_reply(cfg, summary, history, prompt)
-            except Exception as e:  # keep the UI alive if the API hiccups
-                reply = f"Sorry — I couldn't reach the coach service right now ({type(e).__name__})."
+            except Exception as e:  # keep the UI alive if the API hiccups / no key in the demo
+                if not cfg["llm"].get("api_key"):
+                    reply = ("💬 *Live chat is turned off in this public demo* (no API key is "
+                             "configured). The dashboard above is fully functional — or run the "
+                             "app locally with your own key to chat with the coach.")
+                else:
+                    reply = f"Sorry — I couldn't reach the coach service right now ({type(e).__name__})."
         st.markdown(reply)
     history.append({"role": "user", "content": prompt})
     history.append({"role": "assistant", "content": reply})
