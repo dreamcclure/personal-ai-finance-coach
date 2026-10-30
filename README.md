@@ -1,5 +1,16 @@
 # ClearLedger — Personal Finance Coach & Spending Analyzer
 
+> An AI-powered personal-finance coach: it categorizes your card spending with an LLM, predicts
+> your month-end spend with machine learning, and coaches you — in plain language, grounded in
+> your own numbers — to stay under your monthly limit.
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B?logo=streamlit&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-regression-F7931E?logo=scikitlearn&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-32%20passing-16A34A)
+
+![ClearLedger dashboard](assets/dashboard.png)
+
 ## 1. Introduction
 
 **ClearLedger** is a Python + Streamlit application that turns a user's raw card-transaction
@@ -20,12 +31,22 @@ For a selected customer (deliverables target **user id 1696**) the app:
 **Enhancements:** unusual-charge detection, recurring/subscription finder, and a "what-if"
 savings slider.
 
+**Spending meter & live ledger** — a budget gauge, month-to-date vs. projected spend, and a
+filterable transaction ledger:
+
+![Spending meter and ledger](assets/spending-meter.png)
+
+**Chat coach** — a multi-turn assistant whose answers are grounded strictly in the user's real numbers:
+
+![Chat coach](assets/chat-coach.png)
+
 ## 2. Project Structure
 
 ```
-P1_Finance_McClureDrea/
-├── data/                       # raw inputs (read-only) + generated cache
-│   ├── transactions.csv, cards.csv, users.csv, mcc_codes.json
+personal-ai-finance-coach/
+├── data/                       # sanitized sample data + generated cache (see data/README.md)
+│   ├── *.sample.csv            # small sanitized samples (full dataset excluded: size + privacy)
+│   ├── mcc_codes.json          # merchant-category code reference
 │   └── processed/
 │       └── mcc_category_map.json      # generated: cached MCC→bucket mapping
 ├── src/                        # reusable, tested modules
@@ -45,6 +66,7 @@ P1_Finance_McClureDrea/
 │       ├── 1_Overview.py       # dashboard content (dispatched by the router)
 │       └── 2_💬_Chat_Coach.py  # chat coach (second page; emoji in filename = its nav icon)
 ├── tests/                      # pytest suites (32 tests)
+├── assets/                     # screenshots used in this README
 ├── config.yaml                 # paths, reference_day, seed, target user
 ├── .env.example                # API key/endpoint template (copy to .env)
 ├── requirements.txt            # pinned dependencies
@@ -81,6 +103,9 @@ streamlit run app/app.py             # opens http://localhost:8501
   after that it runs offline from the cache.
 - Without a working API key, categorization and chat fall back to a deterministic rule-based
   mode so the app still runs end-to-end.
+- The full raw dataset is **not** included in this repo (size + privacy); only sanitized
+  `*.sample.csv` files are. See [`data/README.md`](data/README.md) for the schema and how to
+  supply your own data.
 
 ## 4. Output Files
 
@@ -88,8 +113,7 @@ streamlit run app/app.py             # opens http://localhost:8501
 |---|---|---|
 | `data/processed/mcc_category_map.json` | first run of `categorize.py` / the app | cached `{MCC code → spending bucket}` mapping (109 entries) |
 | Trained regression model | held in memory (Streamlit cache) at runtime | month-end spend predictor (not persisted to disk) |
-| **Dashboard report (PDF)** | user export/screenshot of the dashboard for user 1696 | submission deliverable |
-| **Chat interface (PDF)** | user export/screenshot of the chat coach for user 1696 | submission deliverable |
+| App screenshots | the running app for user 1696 | see [`assets/`](assets/) (shown at the top of this README) |
 
 ## 5. Guardrails
 
@@ -109,3 +133,10 @@ The app fails safely and never trusts unvalidated input:
 - **Grounded coaching** — the chat coach is instructed to use only the user's real figures and
   decline off-topic or fabricated-number requests.
 - **Secret hygiene** — the API key lives only in `.env` (git-ignored); never hard-coded.
+
+## 6. How this was built (AI-assisted)
+
+ClearLedger was built with an AI pair-programmer (Claude) inside PyCharm, using a plan-first,
+test-as-you-go workflow. The full development story — the planning prompt, the build milestones,
+the guardrails, and where the AI's output was reviewed and corrected — is documented in
+**[`CHAT_TRAIL.md`](CHAT_TRAIL.md)**.
