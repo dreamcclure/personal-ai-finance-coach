@@ -4,10 +4,13 @@
 > your month-end spend with machine learning, and coaches you — in plain language, grounded in
 > your own numbers — to stay under your monthly limit.
 
+[![Live demo](https://img.shields.io/badge/▶_Try_the_live_demo-clearledger.streamlit.app-FF4B4B?logo=streamlit&logoColor=white)](https://clearledger.streamlit.app)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B?logo=streamlit&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-regression-F7931E?logo=scikitlearn&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-34%20passing-16A34A)
+
+**▶ Live demo: [clearledger.streamlit.app](https://clearledger.streamlit.app)** — explore the
+full dashboard for customer 1696, right in your browser (no setup).
 
 ![ClearLedger dashboard](assets/dashboard.png)
 
