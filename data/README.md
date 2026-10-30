@@ -1,29 +1,26 @@
 # data/
 
-This project was built on a **synthetic** financial dataset (fictional users, cards, and
-card transactions — no real people or accounts). The full dataset is **not** included in this
-repository for two reasons:
+This folder holds a small, **sanitized single-customer demo dataset** (customer **1696**) so the
+app runs out of the box — including the live demo. The data is **synthetic** (fictional users,
+cards, and transactions; no real people or accounts).
 
-1. **Size** — `transactions.csv` is ~67 MB (~700,000 rows), too large for a clean Git repo.
-2. **Privacy optics** — although the data is fake, the raw source files include columns such as
-   `card_number`, `cvv`, home `address`, and geographic coordinates. Those are intentionally
-   **removed** from everything published here.
+## What's included
 
-## What's included (sanitized samples)
+| File | Contents |
+|---|---|
+| `transactions.csv` | Customer 1696's transactions only (~30k rows). No card numbers. |
+| `users.csv` | Customer 1696's profile — `address`, `latitude`, `longitude` removed. |
+| `cards.csv` | Customer 1696's card(s) — `card_number` and `cvv` removed. |
+| `mcc_codes.json` | Reference lookup: merchant-category codes → descriptions. |
+| `processed/mcc_category_map.json` | Cached MCC → spending bucket map, so categorization runs offline with no API call. |
 
-Small, sanitized samples are committed so you can see the schema and shape of the data:
+## What's intentionally NOT included
 
-| File | Rows | Notes |
-|---|---|---|
-| `users.sample.csv` | 15 | `address`, `latitude`, `longitude` columns removed |
-| `cards.sample.csv` | 15 | `card_number`, `cvv` columns removed |
-| `transactions.sample.csv` | 200 | no sensitive columns; trimmed to a small sample |
-| `mcc_codes.json` | — | reference lookup: merchant-category codes → descriptions |
-| `processed/mcc_category_map.json` | — | generated cache: MCC code → spending bucket (so categorization can run offline) |
+- The **full multi-user dataset** (~700k transactions, ~67 MB). It's excluded for size and because
+  the raw source files contain sensitive-looking columns (`card_number`, `cvv`, home `address`).
+- Any real secrets — the LLM API key lives only in a local `.env` (see `.env.example`), never here.
 
-## Running the app with the full dataset
+## Running with more data
 
-The application expects the full files at `data/transactions.csv`, `data/cards.csv`, and
-`data/users.csv` (git-ignored). To run it end-to-end, drop a compatible dataset in place using
-the schemas shown by the sample files above. Without the full data, the samples still illustrate
-the structure the code is built around.
+The app reads `data/transactions.csv`, `data/users.csv`, and `data/cards.csv`. To run it on a
+larger dataset, replace these with files that follow the same column schema shown above.

@@ -1,0 +1,2 @@
+id,client_id,card_brand,card_type,expires,has_chip,num_cards_issued,credit_limit,acct_open_date,year_pin_last_changed,card_on_dark_web
+2408,1696,Mastercard,Debit,05/2018,YES,2,$12047,04/2000,2008,No

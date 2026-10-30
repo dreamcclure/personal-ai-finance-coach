@@ -7,7 +7,7 @@
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B?logo=streamlit&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-regression-F7931E?logo=scikitlearn&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-32%20passing-16A34A)
+![Tests](https://img.shields.io/badge/tests-34%20passing-16A34A)
 
 ![ClearLedger dashboard](assets/dashboard.png)
 
@@ -44,8 +44,9 @@ filterable transaction ledger:
 
 ```
 personal-ai-finance-coach/
-├── data/                       # sanitized sample data + generated cache (see data/README.md)
-│   ├── *.sample.csv            # small sanitized samples (full dataset excluded: size + privacy)
+├── data/                       # sanitized single-customer demo dataset + cache (see data/README.md)
+│   ├── transactions.csv        # customer 1696 only (~30k rows); no card numbers
+│   ├── users.csv, cards.csv    # customer 1696; card_number/cvv/address removed
 │   ├── mcc_codes.json          # merchant-category code reference
 │   └── processed/
 │       └── mcc_category_map.json      # generated: cached MCC→bucket mapping
@@ -65,7 +66,7 @@ personal-ai-finance-coach/
 │   └── pages/
 │       ├── 1_Overview.py       # dashboard content (dispatched by the router)
 │       └── 2_💬_Chat_Coach.py  # chat coach (second page; emoji in filename = its nav icon)
-├── tests/                      # pytest suites (32 tests)
+├── tests/                      # pytest suites (34 tests)
 ├── assets/                     # screenshots used in this README
 ├── config.yaml                 # paths, reference_day, seed, target user
 ├── .env.example                # API key/endpoint template (copy to .env)
@@ -92,7 +93,7 @@ cp .env.example .env                 # then edit .env:
 #    LLM_MODEL     = gpt-4o-mini
 
 # 3. (Optional) run the test suite
-pytest                               # 32 tests
+pytest                               # 34 tests
 
 # 4. Launch the app
 streamlit run app/app.py             # opens http://localhost:8501
@@ -103,9 +104,10 @@ streamlit run app/app.py             # opens http://localhost:8501
   after that it runs offline from the cache.
 - Without a working API key, categorization and chat fall back to a deterministic rule-based
   mode so the app still runs end-to-end.
-- The full raw dataset is **not** included in this repo (size + privacy); only sanitized
-  `*.sample.csv` files are. See [`data/README.md`](data/README.md) for the schema and how to
-  supply your own data.
+- A sanitized single-customer **demo dataset** (customer 1696) is included, so the app runs out of
+  the box with **no API key** (categorization uses the committed cache; the chat coach needs a key
+  and otherwise shows a friendly notice). The full multi-user dataset is not included (size +
+  privacy). See [`data/README.md`](data/README.md).
 
 ## 4. Output Files
 

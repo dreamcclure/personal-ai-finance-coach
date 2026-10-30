@@ -18,9 +18,8 @@ __pycache__/
 # PyCharm settings
 .idea/
 
-# Full dataset — synthetic course data, excluded from the public repo for size
-# (transactions.csv is ~67MB) and privacy optics (card_number/cvv/address columns).
-# Small sanitized *.sample.csv files are committed instead — see data/README.md.
-data/transactions.csv
-data/cards.csv
-data/users.csv
+# NOTE: data/ holds a small, sanitized SINGLE-CUSTOMER demo dataset (customer 1696) that IS
+# committed so the app runs out of the box — see data/README.md. The full ~67MB multi-user
+# dataset is intentionally not included. If you ever drop the full files in here, keep them out
+# of git (uncomment below) so the 67MB transactions file isn't committed:
+# data/transactions_full.csv
