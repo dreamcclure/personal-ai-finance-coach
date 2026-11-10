@@ -109,7 +109,8 @@ streamlit run app/app.py             # opens http://localhost:8501
   mode so the app still runs end-to-end.
 - A sanitized single-customer **demo dataset** (customer 1696) is included, so the app runs out of
   the box with **no API key** (categorization uses the committed cache; the chat coach needs a key
-  and otherwise shows a friendly notice). The full multi-user dataset is not included (size +
+  and otherwise shows a friendly notice). On the public demo the key lives in Streamlit Cloud
+  Secrets and chat is **rate-limited to 10 questions per hour per visitor**. The full multi-user dataset is not included (size +
   privacy). See [`data/README.md`](data/README.md).
 
 ## 4. Output Files
@@ -137,7 +138,9 @@ The app fails safely and never trusts unvalidated input:
 - **Prediction sanity** — projected month-end spend can never fall below money already spent.
 - **Grounded coaching** — the chat coach is instructed to use only the user's real figures and
   decline off-topic or fabricated-number requests.
-- **Secret hygiene** — the API key lives only in `.env` (git-ignored); never hard-coded.
+- **Secret hygiene** — the API key lives only in `.env` (git-ignored) or Streamlit Cloud Secrets; never hard-coded.
+- **Cost guardrail** — the public demo's chat is rate-limited per visitor session, backed by a
+  hard spending cap on the API account.
 
 ## 6. How this was built (AI-assisted)
 

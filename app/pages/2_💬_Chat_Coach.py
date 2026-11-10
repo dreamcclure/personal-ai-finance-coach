@@ -5,6 +5,7 @@ Appears as a second page alongside the dashboard. Shows the required figures
 computed metrics via src/coach.py.
 """
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -14,6 +15,19 @@ import streamlit as st
 from app import theme
 from app._shared import get_user_view, load_everything, new_entry_popover
 from src.coach import build_summary, coach_reply
+
+# --- cost guardrail for the public demo: per-visitor rate limit ---
+# (the hard ceiling is the spending cap set on the API account itself)
+RATE_LIMIT = 10        # questions...
+RATE_WINDOW = 3600     # ...per hour, per browser session
+
+
+def within_rate_limit() -> bool:
+    now = time.time()
+    hits = [t for t in st.session_state.get("coach_hits", []) if now - t < RATE_WINDOW]
+    st.session_state.coach_hits = hits
+    return len(hits) < RATE_LIMIT
+
 
 cfg, master, monthly, res = load_everything()
 model = res["model"]
@@ -49,6 +63,8 @@ with st.container(border=True):
 if not cfg["llm"].get("api_key"):
     st.info("💬 Live chat is disabled in this public demo (no API key configured). "
             "The dashboard is fully functional — run the app locally with your own key to chat.")
+else:
+    st.caption(f"Public demo: up to {RATE_LIMIT} questions per hour per visitor.")
 
 # Per-user chat history (switching users starts a fresh conversation).
 state_key = f"chat_history_{uid}"
@@ -65,16 +81,21 @@ if prompt:
     with st.chat_message("user", avatar=theme.CHAT_AVATARS["user"]):
         st.markdown(prompt)
     with st.chat_message("assistant", avatar=theme.CHAT_AVATARS["assistant"]):
-        with st.spinner("Coaching…"):
-            try:
-                reply = coach_reply(cfg, summary, history, prompt)
-            except Exception as e:  # keep the UI alive if the API hiccups / no key in the demo
-                if not cfg["llm"].get("api_key"):
-                    reply = ("💬 *Live chat is turned off in this public demo* (no API key is "
-                             "configured). The dashboard above is fully functional — or run the "
-                             "app locally with your own key to chat with the coach.")
-                else:
-                    reply = f"Sorry — I couldn't reach the coach service right now ({type(e).__name__})."
+        if cfg["llm"].get("api_key") and not within_rate_limit():
+            reply = ("⏳ You've reached this demo's hourly question limit. Please try again later "
+                     "— or run the app locally with your own API key (see the GitHub repo).")
+        else:
+            st.session_state.coach_hits = st.session_state.get("coach_hits", []) + [time.time()]
+            with st.spinner("Coaching…"):
+                try:
+                    reply = coach_reply(cfg, summary, history, prompt)
+                except Exception as e:  # keep the UI alive if the API hiccups / no key in the demo
+                    if not cfg["llm"].get("api_key"):
+                        reply = ("💬 *Live chat is turned off in this public demo* (no API key is "
+                                 "configured). The dashboard above is fully functional — or run the "
+                                 "app locally with your own key to chat with the coach.")
+                    else:
+                        reply = f"Sorry — I couldn't reach the coach service right now ({type(e).__name__})."
         st.markdown(reply)
     history.append({"role": "user", "content": prompt})
     history.append({"role": "assistant", "content": reply})

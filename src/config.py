@@ -15,6 +15,21 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
+_LLM_KEYS = ("LLM_PROVIDER", "LLM_API_KEY", "LLM_MODEL", "LLM_BASE_URL")
+
+
+def _bridge_streamlit_secrets() -> None:
+    """On Streamlit Cloud, secrets live in st.secrets (not .env) — copy them into the
+    environment so the rest of the app reads them the same way. Locally this is a no-op."""
+    try:
+        import streamlit as st
+        for k in _LLM_KEYS:
+            if k in st.secrets and not os.getenv(k):
+                os.environ[k] = str(st.secrets[k])
+    except Exception:  # no Streamlit, or no secrets file — fine, .env is used instead
+        pass
+
+
 def load_config(config_path: str | Path | None = None) -> dict:
     """Load config.yaml + .env into one dict with absolute paths resolved."""
     cfg_path = Path(config_path) if config_path else PROJECT_ROOT / "config.yaml"
@@ -27,6 +42,7 @@ def load_config(config_path: str | Path | None = None) -> dict:
 
     # Load secrets from .env (if present) into a tidy sub-dict.
     load_dotenv(PROJECT_ROOT / ".env")
+    _bridge_streamlit_secrets()
     cfg["llm"] = {
         "provider": os.getenv("LLM_PROVIDER"),
         "api_key": os.getenv("LLM_API_KEY"),
