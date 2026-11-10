@@ -136,7 +136,6 @@ def categorize_mcc_codes(mcc_codes: dict, cfg: dict, use_cache: bool = True,
             resp = client.chat.completions.create(
                 model=cfg["llm"]["model"],
                 messages=[{"role": "user", "content": _build_prompt(mcc_codes)}],
-                temperature=0,
             )
             raw = _parse_json_object(resp.choices[0].message.content)
             mapping = _validate_and_fill(raw, mcc_codes)

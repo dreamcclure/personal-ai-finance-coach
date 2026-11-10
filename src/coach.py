@@ -73,6 +73,6 @@ def coach_reply(cfg: dict, summary: dict, history: list[dict],
     messages = build_messages(context, history, user_message)
     client = client or get_client(cfg)
     resp = client.chat.completions.create(
-        model=cfg["llm"]["model"], messages=messages, temperature=0.3,
+        model=cfg["llm"]["model"], messages=messages,
     )
     return resp.choices[0].message.content
