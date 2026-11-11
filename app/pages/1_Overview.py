@@ -237,7 +237,7 @@ with meter_col:
                        f'<p class="cl-gauge-value" style="text-align:left; color:{theme.INK};">'
                        f'${mtd_display:,.0f}</p>', unsafe_allow_html=True)
         with rem_col:
-            st.markdown(f'<p class="cl-mono cl-gauge-label" style="text-align:right; white-space:nowrap;">PROJECTED LEFT</p>'
+            st.markdown(f'<p class="cl-mono cl-gauge-label" style="text-align:right; white-space:nowrap;">PROJ. LEFT</p>'
                        f'<p class="cl-gauge-value" style="text-align:right; color:{theme.PRIMARY};">'
                        f'${max(limit - projected, 0):,.0f}</p>', unsafe_allow_html=True)
     st.markdown(
