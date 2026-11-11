@@ -39,7 +39,8 @@ def get_user_view(cfg, master, monthly, model, uid):
     proj = predict_month_end(model, monthly, cfg, uid)
     limit = float(user_df["monthly_discretionary_limit"].iloc[0])
     ref_period = pd.Period(proj["reference_month"], "M")
-    ref_df = user_df[user_df["date"].dt.to_period("M") == ref_period]
+    ref_df = user_df[(user_df["date"].dt.to_period("M") == ref_period)
+                     & (user_df["date"].dt.day <= proj["ref_day"])]
     cat_spend = (ref_df[ref_df["is_discretionary"].fillna(False)]
                  .groupby("category")["amount"].sum())
     return user_df, proj, limit, cat_spend

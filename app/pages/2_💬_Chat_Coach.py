@@ -74,12 +74,12 @@ history = st.session_state[state_key]
 
 for msg in history:
     with st.chat_message(msg["role"], avatar=theme.CHAT_AVATARS.get(msg["role"])):
-        st.markdown(msg["content"])
+        st.markdown(msg["content"].replace("$", "\\$"))
 
 prompt = st.chat_input("Ask your finance coach…")
 if prompt:
     with st.chat_message("user", avatar=theme.CHAT_AVATARS["user"]):
-        st.markdown(prompt)
+        st.markdown(prompt.replace("$", "\\$"))
     with st.chat_message("assistant", avatar=theme.CHAT_AVATARS["assistant"]):
         if cfg["llm"].get("api_key") and not within_rate_limit():
             reply = ("⏳ You've reached this demo's hourly question limit. Please try again later "
@@ -96,6 +96,6 @@ if prompt:
                                  "app locally with your own key to chat with the coach.")
                     else:
                         reply = f"Sorry — I couldn't reach the coach service right now ({type(e).__name__})."
-        st.markdown(reply)
+        st.markdown(reply.replace("$", "\\$"))
     history.append({"role": "user", "content": prompt})
     history.append({"role": "assistant", "content": reply})
