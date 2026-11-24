@@ -43,6 +43,17 @@ filterable transaction ledger:
 
 ![Chat coach](assets/chat-coach.png)
 
+## Evaluation & Benchmark
+
+| Stage | Metric | Result |
+|---|---|---|
+| **Data Ingestion & Schema Validation** | Rows parsed; amount/date/MCC coverage | **699,938** transactions (2010–2019); **100%** amount, date & MCC parse/coverage (tests assert >99%); `"$4.81"`→float, dates→datetime, MCC→categorical |
+| **LLM Categorization & Caching Layer** | Codes classified; API calls | **109** MCC codes → **13-bucket** taxonomy in **1 cached LLM call** (**0** per-transaction calls); every code validated to a legal bucket, deterministic keyword fallback |
+| **Month-End Discretionary Spend Regression** | Model vs. baseline; held-out fit | GradientBoosting vs. LinearRegression baseline, **80/20** split; **R² ≈ 0.85–0.86**; projection guaranteed ≥ month-to-date spend |
+| **Automated Unit Test Coverage** | pytest suite | **34 passing tests** across **6 modules** (loader, categorization, features/prediction, recommender, coach, insights) |
+
+<sub>Figures come from existing code, test assertions, and logged runs (`PROJECT_SPEC.md`, `CHAT_TRAIL.md`, `src/`, `tests/`) — nothing re-estimated here.</sub>
+
 ## 2. Project Structure
 
 ```
